@@ -7,6 +7,10 @@ compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 binding = "ASSETS"
 directory = ".open-next/assets"
 
+[[routes]]
+pattern = "ccom.isap.vn"
+custom_domain = true
+
 [durable_objects]
 bindings = [
   { name = "STORE_CONFIG_DO", class_name = "StoreConfigDurableObject" }
