@@ -17,7 +17,7 @@ tag = "v1"
 new_sqlite_classes = ["StoreConfigDurableObject"]
 
 [vars]
-# Add Cloudflare bindings here when needed
+ADMIN_PASSWORD = "password"
 
 [observability.logs]
 enabled = true
