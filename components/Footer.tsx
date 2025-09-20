@@ -1,5 +1,5 @@
+import Link from 'next/link';
 import { Recycle } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import {
   storeContact,
   storeLegal,
@@ -11,9 +11,9 @@ import {
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12 mt-auto">
+    <footer className="mt-auto bg-gray-900 py-12 text-white">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid gap-8 md:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Recycle className="h-8 w-8 text-green-400" />
@@ -28,11 +28,11 @@ function Footer() {
               {storeProductLinks.map((link) => (
                 <li key={link.label}>
                   {link.href.startsWith('/') ? (
-                    <Link to={link.href} className="hover:text-white transition-colors">
+                    <Link href={link.href} className="transition-colors hover:text-white">
                       {link.label}
                     </Link>
                   ) : (
-                    <a href={link.href} className="hover:text-white transition-colors">
+                    <a href={link.href} className="transition-colors hover:text-white">
                       {link.label}
                     </a>
                   )}
@@ -47,11 +47,11 @@ function Footer() {
               {storeSupportLinks.map((link) => (
                 <li key={link.label}>
                   {link.href.startsWith('/') ? (
-                    <Link to={link.href} className="hover:text-white transition-colors">
+                    <Link href={link.href} className="transition-colors hover:text-white">
                       {link.label}
                     </Link>
                   ) : (
-                    <a href={link.href} className="hover:text-white transition-colors">
+                    <a href={link.href} className="transition-colors hover:text-white">
                       {link.label}
                     </a>
                   )}

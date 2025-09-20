@@ -1,54 +1,61 @@
+'use client';
+
 import { useState } from 'react';
-import { ArrowRight, Award, Check, Heart, ShoppingCart, Share2, Shield, Star } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  Award,
+  Check,
+  Heart,
+  ShoppingCart,
+  Share2,
+  Shield,
+  Star,
+} from 'lucide-react';
 import {
   productBenefits,
   productColors,
   productFeatures,
   productSpecifications,
-} from '../config/product';
+} from '../../config/product';
 
-function ProductDetailPage() {
+export default function ProductDetailClient() {
   const [selectedColor, setSelectedColor] = useState<string>(productColors[0].id);
-
-  const activeColor =
-    productColors.find((option) => option.id === selectedColor) ?? productColors[0];
+  const activeColor = productColors.find((option) => option.id === selectedColor) ?? productColors[0];
 
   return (
-    <main className="bg-gray-50">
-      {/* Breadcrumb */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Link to="/" className="hover:text-green-600">
-              Trang chủ
-            </Link>
-            <span>/</span>
-            <Link to="/product" className="hover:text-green-600">
-              Sản phẩm
-            </Link>
-            <span>/</span>
-            <span className="text-gray-900">Máy xử lý rác thải CCoM</span>
-          </div>
+    <div className="bg-gray-50">
+      <div className="border-b bg-white">
+        <div className="container mx-auto flex items-center space-x-2 px-4 py-3 text-sm text-gray-600">
+          <Link href="/" className="hover:text-green-600">
+            Trang chủ
+          </Link>
+          <span>/</span>
+          <Link href="/product" className="hover:text-green-600">
+            Sản phẩm
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900">Máy xử lý rác thải CCoM</span>
         </div>
       </div>
 
-      {/* Product Detail */}
       <section className="container mx-auto px-4 py-12">
         <div className="grid gap-12 lg:grid-cols-2">
-          {/* Product Images */}
           <div className="space-y-6">
             <div className="rounded-3xl bg-white p-8 shadow-lg">
               <div className="relative mx-auto aspect-square w-full max-w-[420px]">
-                <img
+                <Image
                   src={activeColor.image}
                   alt="Máy xử lý rác thải CCoM"
-                  className="h-full w-full object-contain"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 420px"
+                  className="object-contain"
+                  priority
                 />
               </div>
             </div>
 
-            {/* Color Selection */}
             <div className="flex justify-center space-x-4">
               {productColors.map((color) => (
                 <button
@@ -64,7 +71,6 @@ function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Product Info */}
           <div className="space-y-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -84,13 +90,10 @@ function ProductDetailPage() {
               <div className="flex items-center space-x-4">
                 <span className="text-3xl font-bold text-green-600">4.990.000₫</span>
                 <span className="text-xl text-gray-400 line-through">5.990.000₫</span>
-                <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600">
-                  Giảm 17%
-                </span>
+                <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-600">Giảm 17%</span>
               </div>
             </div>
 
-            {/* Product Description */}
             <div className="rounded-xl bg-green-50 p-6">
               <h3 className="mb-3 text-lg font-semibold text-gray-900">Mô tả sản phẩm</h3>
               <p className="leading-relaxed text-gray-700">
@@ -99,7 +102,6 @@ function ProductDetailPage() {
               </p>
             </div>
 
-            {/* Color Selection */}
             <div className="space-y-6">
               <div>
                 <h4 className="mb-3 font-semibold text-gray-900">Màu sắc: {activeColor.name}</h4>
@@ -120,10 +122,8 @@ function ProductDetailPage() {
                   ))}
                 </div>
               </div>
-
             </div>
 
-            {/* Action Buttons */}
             <div className="space-y-4">
               <button
                 type="button"
@@ -151,7 +151,6 @@ function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Guarantees */}
             <div className="rounded-xl bg-blue-50 p-4">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="space-y-2">
@@ -171,9 +170,7 @@ function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Detailed Information */}
         <div className="mt-16 rounded-3xl bg-white shadow-lg">
-          {/* Specifications */}
           <div className="p-8">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">Thông số kỹ thuật</h2>
             <div className="grid gap-6 md:grid-cols-2">
@@ -191,7 +188,6 @@ function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Features */}
           <div className="bg-gray-50 p-8">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">Tính năng nổi bật</h2>
             <div className="grid gap-6 md:grid-cols-2">
@@ -209,7 +205,6 @@ function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Benefits */}
           <div className="p-8">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">Lý do nên chọn CCoM</h2>
             <div className="grid gap-4 md:grid-cols-2">
@@ -223,7 +218,6 @@ function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Final CTA */}
         <div className="mt-12 rounded-3xl bg-gradient-to-r from-green-600 to-green-700 p-8 text-center text-white">
           <h2 className="mb-4 text-3xl font-bold">Đặt hàng ngay hôm nay!</h2>
           <p className="mb-6 text-xl text-green-100">
@@ -238,8 +232,6 @@ function ProductDetailPage() {
           </button>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
-
-export default ProductDetailPage;
