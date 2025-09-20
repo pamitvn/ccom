@@ -5,10 +5,6 @@ import ProductForm from './product-form';
 import StoreForm from './store-form';
 import PasswordForm from './password-form';
 
-function formatLinks(links: { label: string; href: string }[]) {
-  return links.map((link) => `${link.label} | ${link.href}`).join('\n');
-}
-
 export default async function AdminPage() {
   const authed = await isAdminAuthenticated();
   if (!authed) {
@@ -23,22 +19,16 @@ export default async function AdminPage() {
     hotline: config.store.contact.hotline,
     email: config.store.contact.email,
     address: config.store.contact.address,
-    productLinks: formatLinks(config.store.productLinks),
-    supportLinks: formatLinks(config.store.supportLinks),
+    productLinks: config.store.productLinks,
+    supportLinks: config.store.supportLinks,
     legal: config.store.legal,
   };
 
   const productDefaults = {
-    colors: config.product.colors
-      .map((color) => `${color.id} | ${color.name} | ${color.swatchClasses} | ${color.image}`)
-      .join('\n'),
-    specifications: config.product.specifications
-      .map((spec) => `${spec.icon} | ${spec.label} | ${spec.value}`)
-      .join('\n'),
-    features: config.product.features
-      .map((feature) => `${feature.icon} | ${feature.title} | ${feature.description}`)
-      .join('\n'),
-    benefits: config.product.benefits.join('\n'),
+    colors: config.product.colors,
+    specifications: config.product.specifications,
+    features: config.product.features,
+    benefits: config.product.benefits,
   };
 
   return (

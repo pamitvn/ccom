@@ -1,7 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { updateStoreAction } from './actions';
+
+type Link = {
+  label: string;
+  href: string;
+};
+
+type LinkItem = Link & { key: string };
 
 type StoreFormProps = {
   defaults: {
@@ -10,8 +18,8 @@ type StoreFormProps = {
     hotline: string;
     email: string;
     address: string;
-    productLinks: string;
-    supportLinks: string;
+    productLinks: Link[];
+    supportLinks: Link[];
     legal: string;
   };
 };
@@ -22,6 +30,8 @@ type ActionState = {
 };
 
 const initialState: ActionState = { status: 'idle' };
+
+const createKey = () => Math.random().toString(36).slice(2);
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -36,8 +46,18 @@ function SubmitButton({ label }: { label: string }) {
   );
 }
 
+function useLinkRepeater(initial: Link[]): [LinkItem[], (updater: (items: LinkItem[]) => LinkItem[]) => void] {
+  const seeded = initial.length > 0 ? initial : [{ label: '', href: '' }];
+  const [items, setItems] = useState<LinkItem[]>(
+    seeded.map((item) => ({ ...item, key: createKey() }))
+  );
+  return [items, (updater) => setItems((prev) => updater(prev))];
+}
+
 export default function StoreForm({ defaults }: StoreFormProps) {
   const [state, formAction] = useFormState(updateStoreAction, initialState);
+  const [productLinks, setProductLinks] = useLinkRepeater(defaults.productLinks);
+  const [supportLinks, setSupportLinks] = useLinkRepeater(defaults.supportLinks);
 
   return (
     <form action={formAction} className="space-y-6">
@@ -104,30 +124,115 @@ export default function StoreForm({ defaults }: StoreFormProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <label htmlFor="productLinks" className="text-sm font-medium text-slate-700">
-            Liên kết sản phẩm <span className="text-xs text-slate-400">(mỗi dòng: nhãn | URL)</span>
-          </label>
-          <textarea
-            id="productLinks"
-            name="productLinks"
-            defaultValue={defaults.productLinks}
-            rows={4}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
-          />
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-slate-800">Liên kết sản phẩm</h3>
+          <button
+            type="button"
+            className="text-sm font-medium text-green-600 hover:text-green-700"
+            onClick={() =>
+              setProductLinks((items) => [...items, { key: createKey(), label: '', href: '' }])
+            }
+          >
+            + Thêm liên kết
+          </button>
         </div>
-        <div>
-          <label htmlFor="supportLinks" className="text-sm font-medium text-slate-700">
-            Liên kết hỗ trợ <span className="text-xs text-slate-400">(mỗi dòng: nhãn | URL)</span>
-          </label>
-          <textarea
-            id="supportLinks"
-            name="supportLinks"
-            defaultValue={defaults.supportLinks}
-            rows={4}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
-          />
+        <div className="space-y-3">
+          {productLinks.map((link, index) => (
+            <div
+              key={link.key}
+              className="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 md:flex-row md:items-center md:gap-4"
+            >
+              <div className="flex-1">
+                <label className="text-xs font-medium text-slate-500">Nhãn</label>
+                <input
+                  name={`productLinks[${index}][label]`}
+                  defaultValue={link.label}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+                  placeholder="Ví dụ: Máy xử lý rác"
+                  required
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-xs font-medium text-slate-500">Đường dẫn</label>
+                <input
+                  name={`productLinks[${index}][href]`}
+                  defaultValue={link.href}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+                  placeholder="/product"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                className="self-start text-sm font-medium text-slate-500 hover:text-red-600 disabled:cursor-not-allowed"
+                onClick={() =>
+                  setProductLinks((items) =>
+                    items.filter((_, itemIndex) => itemIndex !== index)
+                  )
+                }
+                disabled={productLinks.length <= 1}
+              >
+                Xóa
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-slate-800">Liên kết hỗ trợ</h3>
+          <button
+            type="button"
+            className="text-sm font-medium text-green-600 hover:text-green-700"
+            onClick={() =>
+              setSupportLinks((items) => [...items, { key: createKey(), label: '', href: '' }])
+            }
+          >
+            + Thêm liên kết
+          </button>
+        </div>
+        <div className="space-y-3">
+          {supportLinks.map((link, index) => (
+            <div
+              key={link.key}
+              className="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 md:flex-row md:items-center md:gap-4"
+            >
+              <div className="flex-1">
+                <label className="text-xs font-medium text-slate-500">Nhãn</label>
+                <input
+                  name={`supportLinks[${index}][label]`}
+                  defaultValue={link.label}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+                  placeholder="Ví dụ: FAQ"
+                  required
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-xs font-medium text-slate-500">Đường dẫn</label>
+                <input
+                  name={`supportLinks[${index}][href]`}
+                  defaultValue={link.href}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+                  placeholder="/#faq"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                className="self-start text-sm font-medium text-slate-500 hover:text-red-600 disabled:cursor-not-allowed"
+                onClick={() =>
+                  setSupportLinks((items) =>
+                    items.filter((_, itemIndex) => itemIndex !== index)
+                  )
+                }
+                disabled={supportLinks.length <= 1}
+              >
+                Xóa
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 

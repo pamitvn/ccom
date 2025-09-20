@@ -29,6 +29,104 @@ type ActionState = {
 const successState: ActionState = { status: 'success', message: 'Đã lưu cấu hình.' };
 const unauthorizedState: ActionState = { status: 'error', message: 'Bạn không có quyền thực hiện thao tác này.' };
 
+const LINK_FIELDS = ['label', 'href'] as const;
+const COLOR_FIELDS = ['id', 'name', 'swatchClasses', 'image'] as const;
+const SPEC_FIELDS = ['icon', 'label', 'value'] as const;
+const FEATURE_FIELDS = ['icon', 'title', 'description'] as const;
+
+function collectIndexedObjects<TField extends string>(
+  formData: FormData,
+  group: string,
+  fields: readonly TField[]
+): Array<Partial<Record<TField, string>>> {
+  const regex = new RegExp(`^${group}\\[(\\d+)\\]\\[(${fields.join('|')})\\]$`);
+  const results = new Map<number, Partial<Record<TField, string>>>();
+
+  formData.forEach((value, key) => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    const match = regex.exec(key);
+    if (!match) {
+      return;
+    }
+    const index = Number(match[1]);
+    const field = match[2] as TField;
+    const entry = results.get(index) ?? ({} as Partial<Record<TField, string>>);
+    entry[field] = value.trim();
+    results.set(index, entry);
+  });
+
+  return Array.from(results.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([, entry]) => entry);
+}
+
+function collectIndexedValues(formData: FormData, group: string): string[] {
+  const regex = new RegExp(`^${group}\\[(\\d+)\\]$`);
+  const values: Array<{ index: number; value: string }> = [];
+
+  formData.forEach((value, key) => {
+    if (typeof value !== 'string') {
+      return;
+    }
+    const match = regex.exec(key);
+    if (!match) {
+      return;
+    }
+    values.push({ index: Number(match[1]), value: value.trim() });
+  });
+
+  return values
+    .sort((a, b) => a.index - b.index)
+    .map((item) => item.value)
+    .filter((entry) => entry.length > 0);
+}
+
+function parseLinkArray(formData: FormData, key: string) {
+  const entries = collectIndexedObjects(formData, key, LINK_FIELDS);
+  return entries
+    .map((entry) => ({
+      label: entry.label ?? '',
+      href: entry.href ?? '',
+    }))
+    .filter((entry) => entry.label.length > 0 && entry.href.length > 0);
+}
+
+function parseColors(formData: FormData): ProductColorOption[] {
+  const entries = collectIndexedObjects(formData, 'colors', COLOR_FIELDS);
+  return entries
+    .map((entry) => ({
+      id: entry.id ?? '',
+      name: entry.name ?? '',
+      swatchClasses: entry.swatchClasses ?? '',
+      image: entry.image ?? '',
+    }))
+    .filter((entry) => entry.id.length > 0 && entry.name.length > 0 && entry.image.length > 0);
+}
+
+function parseSpecifications(formData: FormData): ProductSpecification[] {
+  const entries = collectIndexedObjects(formData, 'specifications', SPEC_FIELDS);
+  return entries
+    .map((entry) => ({
+      icon: (entry.icon ?? 'palette') as ProductSpecification['icon'],
+      label: entry.label ?? '',
+      value: entry.value ?? '',
+    }))
+    .filter((entry) => entry.label.length > 0 && entry.value.length > 0);
+}
+
+function parseFeatures(formData: FormData): ProductFeature[] {
+  const entries = collectIndexedObjects(formData, 'features', FEATURE_FIELDS);
+  return entries
+    .map((entry) => ({
+      icon: entry.icon ?? '🌿',
+      title: entry.title ?? '',
+      description: entry.description ?? '',
+    }))
+    .filter((entry) => entry.title.length > 0 && entry.description.length > 0);
+}
+
 export async function loginAction(_prevState: LoginState, formData: FormData): Promise<LoginState> {
   const password = (formData.get('password') as string | null)?.trim() ?? '';
   if (!password) {
@@ -55,6 +153,8 @@ export async function updateStoreAction(_prev: ActionState | undefined, formData
   }
 
   const current = await getAppConfig();
+  const productLinks = parseLinkArray(formData, 'productLinks');
+  const supportLinks = parseLinkArray(formData, 'supportLinks');
   const updatedStore: StoreConfig = {
     name: (formData.get('name') as string | null)?.trim() || current.store.name,
     tagline: (formData.get('tagline') as string | null)?.trim() || '',
@@ -63,8 +163,8 @@ export async function updateStoreAction(_prev: ActionState | undefined, formData
       email: (formData.get('email') as string | null)?.trim() || '',
       address: (formData.get('address') as string | null)?.trim() || '',
     },
-    productLinks: parseLinks(formData.get('productLinks') as string | null) ?? current.store.productLinks,
-    supportLinks: parseLinks(formData.get('supportLinks') as string | null) ?? current.store.supportLinks,
+    productLinks,
+    supportLinks,
     legal: (formData.get('legal') as string | null)?.trim() || '',
   };
 
@@ -93,16 +193,16 @@ export async function updateProductAction(_prev: ActionState | undefined, formDa
   }
 
   const current = await getAppConfig();
-  const colors = parseColors(formData.get('colors') as string | null) ?? current.product.colors;
-  const specifications = parseSpecifications(formData.get('specifications') as string | null) ?? current.product.specifications;
-  const features = parseFeatures(formData.get('features') as string | null) ?? current.product.features;
-  const benefits = parseLines(formData.get('benefits') as string | null) ?? current.product.benefits;
+  const colors = parseColors(formData);
+  const specifications = parseSpecifications(formData);
+  const features = parseFeatures(formData);
+  const benefits = collectIndexedValues(formData, 'benefits');
 
   const product: ProductConfig = {
-    colors,
-    specifications,
-    features,
-    benefits,
+    colors: colors.length > 0 ? colors : current.product.colors,
+    specifications: specifications.length > 0 ? specifications : current.product.specifications,
+    features: features.length > 0 ? features : current.product.features,
+    benefits: benefits.length > 0 ? benefits : current.product.benefits,
   };
 
   const updated: AppConfig = {
@@ -122,77 +222,6 @@ export async function updateProductAction(_prev: ActionState | undefined, formDa
       message: error instanceof Error ? error.message : 'Không thể lưu cấu hình sản phẩm.',
     };
   }
-}
-
-function parseLinks(input: string | null): StoreConfig['productLinks'] | undefined {
-  if (!input) {
-    return undefined;
-  }
-  const lines = input
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const links = lines.map((line) => {
-    const [label = '', href = ''] = line.split('|').map((part) => part.trim());
-    return { label, href };
-  });
-
-  return links.length > 0 ? links : undefined;
-}
-
-function parseColors(input: string | null): ProductColorOption[] | undefined {
-  if (!input) {
-    return undefined;
-  }
-
-  const colors = input
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [id = '', name = '', swatchClasses = '', image = ''] = line.split('|').map((part) => part.trim());
-      return { id, name, swatchClasses, image } as ProductColorOption;
-    })
-    .filter((color) => color.id && color.name && color.image);
-
-  return colors.length > 0 ? colors : undefined;
-}
-
-function parseSpecifications(input: string | null): ProductSpecification[] | undefined {
-  if (!input) {
-    return undefined;
-  }
-
-  const specs = input
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [icon = '', label = '', value = ''] = line.split('|').map((part) => part.trim());
-      return { icon: icon as ProductSpecification['icon'], label, value };
-    })
-    .filter((spec) => spec.icon && spec.label && spec.value);
-
-  return specs.length > 0 ? specs : undefined;
-}
-
-function parseFeatures(input: string | null): ProductFeature[] | undefined {
-  if (!input) {
-    return undefined;
-  }
-
-  const features = input
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [icon = '', title = '', description = ''] = line.split('|').map((part) => part.trim());
-      return { icon, title, description };
-    })
-    .filter((feature) => feature.title && feature.description);
-
-  return features.length > 0 ? features : undefined;
 }
 
 export async function changePasswordAction(
@@ -230,17 +259,4 @@ export async function changePasswordAction(
       message: error instanceof Error ? error.message : 'Không thể cập nhật mật khẩu.',
     };
   }
-}
-
-function parseLines(input: string | null): string[] | undefined {
-  if (!input) {
-    return undefined;
-  }
-
-  const lines = input
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  return lines.length > 0 ? lines : undefined;
 }

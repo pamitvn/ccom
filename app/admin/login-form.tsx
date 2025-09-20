@@ -37,13 +37,7 @@ export default function LoginForm() {
         />
       </div>
 
-      {state.error ? (
-        <p className="text-sm text-red-600">{state.error}</p>
-      ) : (
-        <p className="text-xs text-slate-400">
-          Đảm bảo bạn đã cấu hình biến môi trường <code>ADMIN_PASSWORD</code> trong hệ thống.
-        </p>
-      )}
+      {state.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
 
       <SubmitButton />
     </form>
