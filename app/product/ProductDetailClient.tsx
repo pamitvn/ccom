@@ -1,28 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { LucideIcon } from 'lucide-react';
 import {
   ArrowRight,
   Award,
   Check,
+  Droplets,
   Heart,
+  Home,
+  Package,
+  Palette,
+  Power,
   ShoppingCart,
   Share2,
   Shield,
   Star,
+  Zap,
 } from 'lucide-react';
-import {
-  productBenefits,
-  productColors,
-  productFeatures,
-  productSpecifications,
-} from '../../config/product';
+import type { ProductColorOption, ProductConfig, SpecificationIconId } from '../../lib/app-config';
 
-export default function ProductDetailClient() {
-  const [selectedColor, setSelectedColor] = useState<string>(productColors[0].id);
-  const activeColor = productColors.find((option) => option.id === selectedColor) ?? productColors[0];
+const specificationIcons: Record<SpecificationIconId, LucideIcon> = {
+  palette: Palette,
+  package: Package,
+  droplets: Droplets,
+  zap: Zap,
+  power: Power,
+  home: Home,
+};
+
+type ProductDetailClientProps = {
+  product: ProductConfig;
+};
+
+export default function ProductDetailClient({ product }: ProductDetailClientProps) {
+  const colors = product.colors;
+  const initialColor = colors[0]?.id ?? '';
+  const [selectedColor, setSelectedColor] = useState<string>(initialColor);
+
+  const activeColor = useMemo<ProductColorOption | undefined>(() => {
+    if (colors.length === 0) {
+      return undefined;
+    }
+    return colors.find((option) => option.id === selectedColor) ?? colors[0];
+  }, [colors, selectedColor]);
 
   return (
     <div className="bg-gray-50">
@@ -45,19 +68,25 @@ export default function ProductDetailClient() {
           <div className="space-y-6">
             <div className="rounded-3xl bg-white p-8 shadow-lg">
               <div className="relative mx-auto aspect-square w-full max-w-[420px]">
-                <Image
-                  src={activeColor.image}
-                  alt="Máy xử lý rác thải CCoM"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 420px"
-                  className="object-contain"
-                  priority
-                />
+                {activeColor ? (
+                  <Image
+                    src={activeColor.image}
+                    alt="Máy xử lý rác thải CCoM"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 420px"
+                    className="object-contain"
+                    priority
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center rounded-2xl bg-gray-100 text-gray-500">
+                    Đang cập nhật
+                  </div>
+                )}
               </div>
             </div>
 
             <div className="flex justify-center space-x-4">
-              {productColors.map((color) => (
+              {colors.map((color) => (
                 <button
                   key={color.id}
                   type="button"
@@ -104,9 +133,11 @@ export default function ProductDetailClient() {
 
             <div className="space-y-6">
               <div>
-                <h4 className="mb-3 font-semibold text-gray-900">Màu sắc: {activeColor.name}</h4>
+                <h4 className="mb-3 font-semibold text-gray-900">
+                  Màu sắc: {activeColor?.name ?? 'Đang cập nhật'}
+                </h4>
                 <div className="flex space-x-3">
-                  {productColors.map((color) => (
+                  {colors.map((color) => (
                     <button
                       key={color.id}
                       type="button"
@@ -174,24 +205,27 @@ export default function ProductDetailClient() {
           <div className="p-8">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">Thông số kỹ thuật</h2>
             <div className="grid gap-6 md:grid-cols-2">
-              {productSpecifications.map((spec) => (
-                <div key={spec.label} className="flex items-center space-x-4 rounded-xl bg-gray-50 p-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                    <spec.icon className="h-6 w-6 text-green-600" />
+              {product.specifications.map((spec) => {
+                const Icon = specificationIcons[spec.icon];
+                return (
+                  <div key={spec.label} className="flex items-center space-x-4 rounded-xl bg-gray-50 p-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                      {Icon ? <Icon className="h-6 w-6 text-green-600" /> : <span>{spec.icon}</span>}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{spec.label}</h4>
+                      <p className="text-gray-600">{spec.value}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{spec.label}</h4>
-                    <p className="text-gray-600">{spec.value}</p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           <div className="bg-gray-50 p-8">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">Tính năng nổi bật</h2>
             <div className="grid gap-6 md:grid-cols-2">
-              {productFeatures.map((feature) => (
+              {product.features.map((feature) => (
                 <div key={feature.title} className="rounded-xl bg-white p-6 shadow-sm">
                   <div className="flex items-start space-x-4">
                     <div className="text-3xl">{feature.icon}</div>
@@ -208,7 +242,7 @@ export default function ProductDetailClient() {
           <div className="p-8">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">Lý do nên chọn CCoM</h2>
             <div className="grid gap-4 md:grid-cols-2">
-              {productBenefits.map((benefit) => (
+              {product.benefits.map((benefit) => (
                 <div key={benefit} className="flex items-center space-x-3">
                   <Check className="h-5 w-5 flex-shrink-0 text-green-600" />
                   <span className="text-gray-700">{benefit}</span>

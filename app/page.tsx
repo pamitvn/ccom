@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Check, DollarSign, Leaf, Recycle, Star } from 'lucide-react';
+import { getStoreConfig } from '../lib/config';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const store = await getStoreConfig();
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -11,11 +13,11 @@ export default function HomePage() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl font-bold leading-tight text-gray-900 lg:text-6xl">
-                Giải pháp xử lý rác tại nhà -
+                {store.tagline} -
                 <span className="text-green-600"> An toàn &amp; Tiện lợi</span>
               </h1>
               <p className="text-xl text-gray-600">
-                Biến rác thải nhà bếp thành phân bón hữu cơ chỉ trong vài giờ
+                Biến rác thải nhà bếp thành phân bón hữu cơ chỉ trong vài giờ cùng {store.name}
               </p>
             </div>
 
@@ -165,7 +167,7 @@ export default function HomePage() {
             <div className="space-y-4">
               <h2 className="text-4xl font-bold text-gray-900">
                 Sản phẩm chính
-                <span className="block text-green-600">CCoM</span>
+                <span className="block text-green-600">{store.name}</span>
               </h2>
               <p className="text-lg text-gray-600">
                 Thiết kế hiện đại, công nghệ tiên tiến, phù hợp với mọi không gian nhà bếp
@@ -189,7 +191,7 @@ export default function HomePage() {
         <div className="container mx-auto flex flex-col items-center gap-6 px-4 text-center text-white">
           <h2 className="text-4xl font-bold">Sẵn sàng thay đổi cách bạn xử lý rác thải?</h2>
           <p className="max-w-2xl text-lg text-green-100">
-            Đặt mua CCoM ngay hôm nay và trải nghiệm không gian sống sạch sẽ, thân thiện với môi trường.
+            Đặt mua {store.name} ngay hôm nay và trải nghiệm không gian sống sạch sẽ, thân thiện với môi trường.
           </p>
           <Link
             href="/product"

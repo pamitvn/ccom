@@ -1,5 +1,5 @@
 name = "ccom"
-main = ".open-next/worker.js"
+main = "worker/index.ts"
 compatibility_date = "2024-12-30"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
@@ -7,5 +7,17 @@ compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 binding = "ASSETS"
 directory = ".open-next/assets"
 
+[durable_objects]
+bindings = [
+  { name = "STORE_CONFIG_DO", class_name = "StoreConfigDurableObject" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["StoreConfigDurableObject"]
+
 [vars]
 # Add Cloudflare bindings here when needed
+
+[observability.logs]
+enabled = true
