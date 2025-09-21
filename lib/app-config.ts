@@ -72,9 +72,9 @@ export const defaultAppConfig: AppConfig = {
       'Khử mùi than hoạt tính, không còn ruồi muỗi.',
     ],
     contact: {
-      hotline: '1900-xxxx',
+      hotline: '0846989394',
       email: 'support@ccom.vn',
-      address: 'Hà Nội, Việt Nam',
+      address: '926/15 Khu Phố 55, Phường Thới An, TP.HCM, Việt Nam',
     },
     productLinks: [
       { label: 'Máy xử lý rác CCoM', href: '/product' },
@@ -86,7 +86,7 @@ export const defaultAppConfig: AppConfig = {
       { label: 'FAQ', href: '/#faq' },
       { label: 'Liên hệ', href: '/#contact' },
     ],
-    legal: '© 2024 CCoM. Tất cả quyền được bảo lưu.',
+    legal: '© 2024 CCoM.',
   },
   product: {
     colors: [
