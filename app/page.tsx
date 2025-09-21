@@ -1,25 +1,115 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Check, DollarSign, Leaf, Recycle, Star } from 'lucide-react';
-import { getStoreConfig } from '../lib/config';
+import type { LucideIcon } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  Check,
+  HeartPulse,
+  Home,
+  Leaf,
+  Sparkles,
+  Sprout,
+  Star,
+  Timer,
+  Shrink,
+} from 'lucide-react';
+import { getProductConfig, getStoreConfig } from '../lib/config';
 
 export default async function HomePage() {
   const store = await getStoreConfig();
+  const product = await getProductConfig();
+
+  const heroHighlights =
+    store.heroHighlights.length > 0
+      ? store.heroHighlights
+      : [
+          'Xử lý rác trong 2–3 giờ thành mùn hữu cơ khô.',
+          'Giảm 80–90% thể tích rác, giữ bếp sạch thơm.',
+          'Khử mùi than hoạt tính, không còn ruồi muỗi.',
+        ];
+
+  const whyItems: { icon: LucideIcon; title: string; description: string }[] = [
+    {
+      icon: Timer,
+      title: 'Xử lý rác trong 2–3 giờ',
+      description:
+        'Rau, vỏ trái cây, thức ăn thừa, bã cà phê, vỏ trứng… được nghiền nhỏ, sấy khô và khử mùi triệt để.',
+    },
+    {
+      icon: Shrink,
+      title: 'Giảm 80–90% thể tích rác',
+      description: 'Không còn cảnh rác tràn thùng hay mùi hôi khó chịu trong căn bếp.',
+    },
+    {
+      icon: Sparkles,
+      title: 'Khử mùi hoàn toàn',
+      description: 'Công nghệ lọc than hoạt tính, không ruồi muỗi, không ám mùi.',
+    },
+    {
+      icon: Leaf,
+      title: 'Tạo phân hữu cơ dinh dưỡng',
+      description: 'Thành phẩm là mùn hữu cơ giàu dưỡng chất, bón trực tiếp cho cây trồng.',
+    },
+    {
+      icon: Home,
+      title: 'Tiện lợi – Sang trọng – Hiện đại',
+      description: 'Thiết kế nhỏ gọn, đẹp mắt, nâng tầm mọi căn bếp gia đình.',
+    },
+  ];
+
+  const audienceItems: { icon: LucideIcon; title: string; description: string }[] = [
+    {
+      icon: Building2,
+      title: 'Gia đình ở chung cư, nhà phố',
+      description: 'Giải pháp gọn nhẹ khi không có nhiều không gian chứa rác.',
+    },
+    {
+      icon: Sprout,
+      title: 'Người yêu làm vườn, trồng cây',
+      description: 'Chủ động nguồn phân hữu cơ sạch, giàu dinh dưỡng mỗi ngày.',
+    },
+    {
+      icon: HeartPulse,
+      title: 'Gia đình chú trọng sức khỏe & môi trường',
+      description: 'Giữ căn bếp sạch đẹp, an toàn cho cả nhà, sống xanh hơn từng ngày.',
+    },
+  ];
+
+  const realBenefits = [
+    'Bảo vệ sức khỏe: không còn vi khuẩn, ruồi muỗi từ rác.',
+    'Tiết kiệm chi phí: có phân hữu cơ miễn phí cho cây trồng.',
+    'Bảo vệ môi trường: giảm lượng rác chôn lấp và khí nhà kính.',
+  ];
+
   return (
     <div className="bg-white">
-      {/* Hero Section */}
       <section id="hero" className="bg-gradient-to-br from-green-50 to-blue-50 py-20">
         <div className="container mx-auto grid items-center gap-12 px-4 lg:grid-cols-2">
           <div className="space-y-8">
+            <span className="inline-flex items-center rounded-full bg-green-100 px-4 py-1 text-sm font-medium text-green-700">
+              Máy tái chế rác hữu cơ gia đình
+            </span>
             <div className="space-y-4">
               <h1 className="text-5xl font-bold leading-tight text-gray-900 lg:text-6xl">
-                {store.tagline} -
-                <span className="text-green-600"> An toàn &amp; Tiện lợi</span>
+                {store.tagline}
+                <span className="ml-2 text-green-600" role="img" aria-label="Sprout">
+                  🌱
+                </span>
               </h1>
               <p className="text-xl text-gray-600">
-                Biến rác thải nhà bếp thành phân bón hữu cơ chỉ trong vài giờ cùng {store.name}
+                Biến rác thành phân – Giữ bếp sạch thơm – Bảo vệ môi trường.
               </p>
             </div>
+
+            <ul className="space-y-3 text-gray-700">
+              {heroHighlights.map((item) => (
+                <li key={item} className="flex items-start space-x-3">
+                  <Check className="mt-1 h-5 w-5 flex-shrink-0 text-green-600" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
@@ -59,139 +149,106 @@ export default async function HomePage() {
               />
             </div>
             <div className="absolute -right-4 -top-4 rounded-full bg-green-600 px-4 py-2 font-semibold text-white">
-              Mới ra mắt!
+              Biến rác thành phân!
             </div>
           </div>
         </div>
       </section>
 
-      {/* Problem Section */}
-      <section id="problems" className="bg-gray-50 py-16">
+      <section id="why" className="py-16">
         <div className="container mx-auto px-4">
-          <div className="mx-auto max-w-4xl space-y-8 text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Vấn đề bạn đang gặp phải?</h2>
-
-            <div className="grid gap-8 md:grid-cols-3">
-              <div className="rounded-2xl bg-white p-6 shadow-sm">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-                  <div className="h-8 w-8 rounded-full bg-red-500" />
-                </div>
-                <h3 className="mb-2 font-semibold text-gray-900">Mùi hôi khó chịu</h3>
-                <p className="text-gray-600">
-                  Rác thải hữu cơ bốc mùi khó chịu trong nhà, ảnh hưởng đến chất lượng cuộc sống
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white p-6 shadow-sm">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
-                  <DollarSign className="h-8 w-8 text-orange-500" />
-                </div>
-                <h3 className="mb-2 font-semibold text-gray-900">Chi phí cao</h3>
-                <p className="text-gray-600">Mỗi tháng phải chi trả nhiều tiền cho việc thu gom và xử lý rác thải</p>
-              </div>
-
-              <div className="rounded-2xl bg-white p-6 shadow-sm">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                  <Leaf className="h-8 w-8 text-gray-500" />
-                </div>
-                <h3 className="mb-2 font-semibold text-gray-900">Không bền vững</h3>
-                <p className="text-gray-600">
-                  Chưa có giải pháp bền vững để bảo vệ môi trường và tái sử dụng rác hữu cơ
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section id="benefits" className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="mb-16 space-y-4 text-center">
-            <h2 className="text-4xl font-bold text-gray-900">CCoM - Giải pháp bạn cần</h2>
-            <p className="mx-auto max-w-2xl text-xl text-gray-600">
-              Nhỏ gọn, tiện lợi, dễ sử dụng - chỉ một nút bấm, máy tự động biến rác thành phân bón
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-4xl font-bold text-gray-900">Tại sao bạn nên có máy này trong bếp?</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              CS 500W xử lý trọn vẹn rác hữu cơ mỗi ngày, giữ căn bếp sạch sẽ và mang lại nguồn phân hữu cơ dồi dào.
             </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-4">
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 transition-colors hover:bg-green-200">
-                <Recycle className="h-10 w-10 text-green-600" />
+          <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
+            {whyItems.map((item) => (
+              <div key={item.title} className="rounded-3xl bg-white p-6 shadow-lg">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900">Giảm mùi hôi trong nhà</h3>
-              <p className="text-gray-600">Khử hoàn toàn mùi hôi từ rác hữu cơ, mang lại không gian sống trong lành</p>
-            </div>
-
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 transition-colors hover:bg-blue-200">
-                <DollarSign className="h-10 w-10 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">Tiết kiệm chi phí xử lý rác</h3>
-              <p className="text-gray-600">Giảm đến 70% chi phí thu gom rác hàng tháng cho gia đình</p>
-            </div>
-
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 transition-colors hover:bg-emerald-200">
-                <Leaf className="h-10 w-10 text-emerald-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">Biến rác thành phân bón</h3>
-              <p className="text-gray-600">Chuyển hóa rác hữu cơ thành phân bón giàu dinh dưỡng cho cây trồng</p>
-            </div>
-
-            <div className="space-y-4 text-center">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-teal-100 transition-colors hover:bg-teal-200">
-                <Check className="h-10 w-10 text-teal-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">Bảo vệ môi trường</h3>
-              <p className="text-gray-600">Góp phần giảm lượng rác thải ra môi trường, bảo vệ hành tinh xanh</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Product Showcase */}
-      <section id="product-overview" className="bg-gray-50 py-20">
-        <div className="container mx-auto grid items-center gap-16 px-4 lg:grid-cols-2">
-          <div>
-            <Image
-              src="/product-white.jpg"
-              alt="Máy CCoM màu trắng"
-              width={720}
-              height={720}
-              className="h-auto w-full rounded-2xl shadow-2xl"
-            />
+      <section id="benefits" className="bg-gray-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mb-12 max-w-3xl text-center md:mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900">Tính năng nổi bật</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              3 trong 1: Sấy nhiệt, nghiền nhỏ và khử mùi than hoạt tính – rác biến thành mùn hữu cơ sạch, khô ráo.
+            </p>
           </div>
 
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h2 className="text-4xl font-bold text-gray-900">
-                Sản phẩm chính
-                <span className="block text-green-600">{store.name}</span>
-              </h2>
-              <p className="text-lg text-gray-600">
-                Thiết kế hiện đại, công nghệ tiên tiến, phù hợp với mọi không gian nhà bếp
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <FeatureItem title="Kích thước: Nhỏ gọn, phù hợp mọi không gian" />
-              <FeatureItem title="Dung tích: 2 - 3 lít" />
-              <FeatureItem title="Điện áp: 220V - 240V" />
-              <FeatureItem title="Công suất: 150W - 200W tiết kiệm điện" />
-              <FeatureItem title="Kiểm soát mùi hoàn toàn" />
-              <FeatureItem title="Vận hành chỉ với 1 nút nhấn" />
-            </div>
+          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {product.features.map((feature) => (
+              <div key={feature.title} className="rounded-3xl bg-white p-6 shadow-sm">
+                <div className="mb-4 text-3xl">{feature.icon}</div>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Call to action */}
+      <section id="audience" className="bg-gray-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-4xl font-bold text-gray-900">Phù hợp với ai?</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Dành cho những gia đình yêu thích sự gọn gàng, sạch sẽ và ưu tiên lối sống xanh.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-8 md:grid-cols-3">
+            {audienceItems.map((item) => (
+              <div key={item.title} className="rounded-3xl bg-white p-6 text-center shadow-lg">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600">
+                  <item.icon className="h-7 w-7" />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="real-benefits" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-4xl font-bold text-gray-900">Lợi ích thực tế</h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Sống tiện nghi hơn và góp phần bảo vệ môi trường ngay trong căn bếp của bạn.
+            </p>
+          </div>
+
+          <ul className="mt-12 grid gap-6 md:grid-cols-3">
+            {realBenefits.map((benefit) => (
+              <li key={benefit} className="rounded-3xl border border-green-100 p-6 text-left shadow-sm">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-green-600 text-white">
+                  <Check className="h-5 w-5" />
+                </div>
+                <p className="text-gray-700">{benefit}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       <section id="cta" className="bg-gradient-to-r from-green-600 to-emerald-600 py-20">
         <div className="container mx-auto flex flex-col items-center gap-6 px-4 text-center text-white">
-          <h2 className="text-4xl font-bold">Sẵn sàng thay đổi cách bạn xử lý rác thải?</h2>
+          <h2 className="text-4xl font-bold">Sẵn sàng nâng cấp căn bếp sống xanh?</h2>
           <p className="max-w-2xl text-lg text-green-100">
-            Đặt mua {store.name} ngay hôm nay và trải nghiệm không gian sống sạch sẽ, thân thiện với môi trường.
+            Đặt mua {store.name} CS 500W ngay hôm nay để biến rác nhà bếp thành phân hữu cơ sạch, bảo vệ sức khỏe cả gia đình và môi trường.
           </p>
           <Link
             href="/product"
@@ -201,15 +258,6 @@ export default async function HomePage() {
           </Link>
         </div>
       </section>
-    </div>
-  );
-}
-
-function FeatureItem({ title }: { title: string }) {
-  return (
-    <div className="flex items-start space-x-3">
-      <Check className="mt-1 h-6 w-6 flex-shrink-0 text-green-600" />
-      <h4 className="font-semibold text-gray-900">{title}</h4>
     </div>
   );
 }

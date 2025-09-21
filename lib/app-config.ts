@@ -12,6 +12,7 @@ export type StoreLink = {
 export type StoreConfig = {
   name: string;
   tagline: string;
+  heroHighlights: string[];
   contact: StoreContact;
   productLinks: StoreLink[];
   supportLinks: StoreLink[];
@@ -31,7 +32,11 @@ export type SpecificationIconId =
   | 'droplets'
   | 'zap'
   | 'power'
-  | 'home';
+  | 'home'
+  | 'filter'
+  | 'ruler'
+  | 'scale'
+  | 'shield';
 
 export type ProductSpecification = {
   icon: SpecificationIconId;
@@ -60,7 +65,12 @@ export type AppConfig = {
 export const defaultAppConfig: AppConfig = {
   store: {
     name: 'CCoM',
-    tagline: 'Giải pháp xử lý rác thải tại nhà thân thiện với môi trường',
+    tagline: 'Máy tái chế rác hữu cơ CS 500W – Dung tích 4L',
+    heroHighlights: [
+      'Xử lý rác trong 2–3 giờ thành mùn hữu cơ khô.',
+      'Giảm 80–90% thể tích rác, giữ bếp sạch thơm.',
+      'Khử mùi than hoạt tính, không còn ruồi muỗi.',
+    ],
     contact: {
       hotline: '1900-xxxx',
       email: 'support@ccom.vn',
@@ -89,42 +99,63 @@ export const defaultAppConfig: AppConfig = {
       },
     ],
     specifications: [
-      { icon: 'palette', label: 'Màu sắc', value: 'Trắng, Đen' },
-      { icon: 'package', label: 'Kích thước', value: 'Nhỏ gọn, tối ưu không gian bếp' },
-      { icon: 'droplets', label: 'Dung tích', value: '2 - 3 lít' },
-      { icon: 'zap', label: 'Điện áp', value: '220V' },
-      { icon: 'power', label: 'Công suất', value: '150W - 200W' },
-      { icon: 'home', label: 'Vận hành', value: 'Tự động, chỉ cần một nút bấm' },
+      { icon: 'power', label: 'Công suất', value: '500W mạnh mẽ, xử lý rác nhanh chóng' },
+      { icon: 'droplets', label: 'Dung tích thùng chứa', value: '4L – đáp ứng nhu cầu gia đình 3–6 người' },
+      { icon: 'filter', label: 'Công nghệ xử lý', value: 'Sấy nhiệt + Nghiền nát + Khử mùi than hoạt tính' },
+      { icon: 'zap', label: 'Nguồn điện', value: '220V – 50Hz, an toàn cho gia đình' },
+      { icon: 'ruler', label: 'Kích thước', value: '30 × 25 × 35 cm (tham khảo)' },
+      { icon: 'scale', label: 'Trọng lượng', value: '7 – 8 kg' },
+      { icon: 'shield', label: 'Chất liệu', value: 'Vỏ ABS + Inox chống gỉ, bền bỉ' },
     ],
     features: [
       {
-        icon: '🌿',
-        title: 'Giảm mùi hôi trong gian bếp',
-        description: 'Công nghệ khử mùi tiên tiến, mang lại không gian sống trong lành',
+        icon: '⚡',
+        title: 'Công suất 500W mạnh mẽ',
+        description: 'Nghiền nhỏ và sấy khô rác hữu cơ chỉ trong 2–3 giờ, giữ bếp sạch thơm.',
       },
       {
-        icon: '💡',
-        title: 'Tiết kiệm chi phí xử lý rác',
-        description: 'Giảm đến 70% chi phí thu gom rác hàng tháng cho gia đình',
+        icon: '🪣',
+        title: 'Dung tích 4L tiện dụng',
+        description: 'Phù hợp gia đình 3–6 người, xử lý rác thải nhà bếp hằng ngày.',
       },
       {
-        icon: '🌱',
-        title: 'Biến rác hữu cơ thành phân bón',
-        description: 'Chuyển hóa rác thải thành phân bón giàu dinh dưỡng cho cây trồng',
+        icon: '🌀',
+        title: '3 trong 1: Sấy – Nghiền – Khử mùi',
+        description: 'Rác được nghiền nhỏ, sấy khô và khử mùi triệt để, không còn nhớp nháp.',
+      },
+      {
+        icon: '⏱️',
+        title: 'Thời gian xử lý nhanh',
+        description: 'Chu trình tiêu chuẩn 2–3 giờ, tùy nhu cầu có thể sấy nhanh 10–15 phút/mẻ.',
+      },
+      {
+        icon: '🔒',
+        title: 'Thiết kế thông minh, an toàn',
+        description: 'Khóa nắp tự động, chống rò điện, vỏ cách nhiệt, hạn chế bỏng.',
+      },
+      {
+        icon: '🔇',
+        title: 'Tiết kiệm điện năng & êm ái',
+        description: 'Tiêu thụ điện thấp, vận hành êm không gây ồn lớn.',
+      },
+      {
+        icon: '🧼',
+        title: 'Vệ sinh cực dễ',
+        description: 'Khay chứa và lưỡi nghiền tháo rời, vệ sinh nhanh chóng.',
       },
       {
         icon: '🌍',
-        title: 'Bảo vệ môi trường',
-        description: 'Giảm lượng rác thải ra ngoài, góp phần bảo vệ hành tinh xanh',
+        title: 'Sống xanh bền vững',
+        description: 'Giảm 80–90% thể tích rác, tạo phân hữu cơ giàu dinh dưỡng cho cây.',
       },
     ],
     benefits: [
-      'Dễ dùng – phù hợp cho mọi thành viên trong gia đình',
-      'Thiết kế tinh tế, nhỏ gọn, sang trọng',
-      'Thân thiện môi trường và bền vững',
-      'Vận hành êm ái, không gây tiếng ồn',
-      'Bảo hành chính hãng 2 năm',
-      'Hỗ trợ kỹ thuật 24/7',
+      'Bảo vệ sức khỏe: không còn vi khuẩn, ruồi muỗi phát sinh từ rác bếp.',
+      'Tiết kiệm chi phí: chủ động nguồn phân hữu cơ sạch cho cây trồng.',
+      'Bảo vệ môi trường: giảm rác thải chôn lấp và khí nhà kính.',
+      'Lý tưởng cho gia đình chung cư, nhà phố muốn tiết kiệm diện tích chứa rác.',
+      'Hoàn hảo cho người yêu trồng cây, làm vườn cần phân hữu cơ sạch.',
+      'Phù hợp gia đình sống xanh, mong muốn căn bếp luôn sạch đẹp.',
     ],
   },
 };

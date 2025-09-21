@@ -4,6 +4,7 @@ import { logoutAction } from './actions';
 import ProductForm from './product-form';
 import StoreForm from './store-form';
 import PasswordForm from './password-form';
+import ResetConfigForm from './reset-config-form';
 
 export default async function AdminPage() {
   const authed = await isAdminAuthenticated();
@@ -16,6 +17,7 @@ export default async function AdminPage() {
   const storeDefaults = {
     name: config.store.name,
     tagline: config.store.tagline,
+    heroHighlights: config.store.heroHighlights,
     hotline: config.store.contact.hotline,
     email: config.store.contact.email,
     address: config.store.contact.address,
@@ -40,14 +42,17 @@ export default async function AdminPage() {
             Cập nhật nhanh nội dung hiển thị ở trang chủ và trang sản phẩm. Thay đổi sẽ áp dụng ngay sau khi lưu.
           </p>
         </div>
-        <form action={logoutAction}>
-          <button
-            type="submit"
-            className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
-          >
-            Đăng xuất
-          </button>
-        </form>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+          <ResetConfigForm />
+          <form action={logoutAction}>
+            <button
+              type="submit"
+              className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:text-slate-800"
+            >
+              Đăng xuất
+            </button>
+          </form>
+        </div>
       </div>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

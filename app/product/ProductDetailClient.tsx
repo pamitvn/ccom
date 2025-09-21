@@ -9,11 +9,14 @@ import {
   Award,
   Check,
   Droplets,
+  Filter,
   Heart,
   Home,
   Package,
   Palette,
   Power,
+  Ruler,
+  Scale,
   ShoppingCart,
   Share2,
   Shield,
@@ -29,6 +32,10 @@ const specificationIcons: Record<SpecificationIconId, LucideIcon> = {
   zap: Zap,
   power: Power,
   home: Home,
+  filter: Filter,
+  ruler: Ruler,
+  scale: Scale,
+  shield: Shield,
 };
 
 type ProductDetailClientProps = {

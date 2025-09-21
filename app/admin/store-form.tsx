@@ -15,6 +15,7 @@ type StoreFormProps = {
   defaults: {
     name: string;
     tagline: string;
+    heroHighlights: string[];
     hotline: string;
     email: string;
     address: string;
@@ -54,10 +55,16 @@ function useLinkRepeater(initial: Link[]): [LinkItem[], (updater: (items: LinkIt
   return [items, (updater) => setItems((prev) => updater(prev))];
 }
 
+type HighlightItem = { key: string; value: string };
+
 export default function StoreForm({ defaults }: StoreFormProps) {
   const [state, formAction] = useFormState(updateStoreAction, initialState);
   const [productLinks, setProductLinks] = useLinkRepeater(defaults.productLinks);
   const [supportLinks, setSupportLinks] = useLinkRepeater(defaults.supportLinks);
+  const seededHighlights = defaults.heroHighlights.length > 0 ? defaults.heroHighlights : [''];
+  const [heroHighlights, setHeroHighlights] = useState<HighlightItem[]>(
+    seededHighlights.map((item) => ({ key: createKey(), value: item }))
+  );
 
   return (
     <form action={formAction} className="space-y-6">
@@ -121,6 +128,46 @@ export default function StoreForm({ defaults }: StoreFormProps) {
             defaultValue={defaults.address}
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
           />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-slate-800">Điểm nhấn nhanh</h3>
+          <button
+            type="button"
+            className="text-sm font-medium text-green-600 hover:text-green-700"
+            onClick={() => setHeroHighlights((items) => [...items, { key: createKey(), value: '' }])}
+          >
+            + Thêm điểm nhấn
+          </button>
+        </div>
+        <div className="space-y-3">
+          {heroHighlights.map((item, index) => (
+            <div
+              key={item.key}
+              className="flex flex-col gap-3 rounded-lg border border-slate-200 p-4 md:flex-row md:items-center"
+            >
+              <div className="flex-1">
+                <label className="text-xs font-medium text-slate-500">Nội dung</label>
+                <input
+                  name={`heroHighlights[${index}]`}
+                  defaultValue={item.value}
+                  placeholder="Ví dụ: Xử lý rác trong 2–3 giờ thành mùn hữu cơ khô."
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                className="self-start text-sm font-medium text-slate-500 hover:text-red-600 disabled:cursor-not-allowed"
+                onClick={() => setHeroHighlights((items) => items.filter((_, i) => i !== index))}
+                disabled={heroHighlights.length <= 1}
+              >
+                Xóa
+              </button>
+            </div>
+          ))}
         </div>
       </div>
 

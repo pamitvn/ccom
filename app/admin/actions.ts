@@ -9,6 +9,7 @@ import {
   ProductFeature,
   ProductSpecification,
   StoreConfig,
+  defaultAppConfig,
 } from '../../lib/app-config';
 import {
   changeAdminPassword,
@@ -155,9 +156,11 @@ export async function updateStoreAction(_prev: ActionState | undefined, formData
   const current = await getAppConfig();
   const productLinks = parseLinkArray(formData, 'productLinks');
   const supportLinks = parseLinkArray(formData, 'supportLinks');
+  const heroHighlights = collectIndexedValues(formData, 'heroHighlights');
   const updatedStore: StoreConfig = {
     name: (formData.get('name') as string | null)?.trim() || current.store.name,
     tagline: (formData.get('tagline') as string | null)?.trim() || '',
+    heroHighlights: heroHighlights.length > 0 ? heroHighlights : current.store.heroHighlights,
     contact: {
       hotline: (formData.get('hotline') as string | null)?.trim() || '',
       email: (formData.get('email') as string | null)?.trim() || '',
@@ -220,6 +223,33 @@ export async function updateProductAction(_prev: ActionState | undefined, formDa
     return {
       status: 'error',
       message: error instanceof Error ? error.message : 'Không thể lưu cấu hình sản phẩm.',
+    };
+  }
+}
+
+export async function resetConfigAction(
+  _prev: ActionState | undefined,
+  _formData: FormData
+): Promise<ActionState> {
+  if (!(await isAdminAuthenticated())) {
+    return unauthorizedState;
+  }
+
+  void _prev;
+  void _formData;
+
+  const clonedDefaults: AppConfig = JSON.parse(JSON.stringify(defaultAppConfig));
+
+  try {
+    await saveAppConfig(clonedDefaults);
+    revalidatePath('/');
+    revalidatePath('/product');
+    revalidatePath('/admin');
+    return successState;
+  } catch (error) {
+    return {
+      status: 'error',
+      message: error instanceof Error ? error.message : 'Không thể khôi phục cấu hình mặc định.',
     };
   }
 }
