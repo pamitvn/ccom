@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getProductConfig } from '../../lib/config';
+import { getProductConfig, getStoreConfig } from '../../lib/config';
 import ProductDetailClient from './ProductDetailClient';
 
 export const metadata: Metadata = {
@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 };
 
 export default async function ProductPage() {
-  const product = await getProductConfig();
-  return <ProductDetailClient product={product} />;
+  const [product, store] = await Promise.all([getProductConfig(), getStoreConfig()]);
+  return (
+    <ProductDetailClient
+      product={product}
+      zaloLink={store.contact.zaloLink}
+      hotline={store.contact.hotline}
+    />
+  );
 }

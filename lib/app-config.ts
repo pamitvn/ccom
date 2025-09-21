@@ -2,6 +2,7 @@ export type StoreContact = {
   hotline: string;
   email: string;
   address: string;
+  zaloLink: string;
 };
 
 export type StoreLink = {
@@ -51,6 +52,8 @@ export type ProductFeature = {
 };
 
 export type ProductConfig = {
+  price: number;
+  discountPercent: number;
   colors: ProductColorOption[];
   specifications: ProductSpecification[];
   features: ProductFeature[];
@@ -75,6 +78,7 @@ export const defaultAppConfig: AppConfig = {
       hotline: '0846989394',
       email: 'support@ccom.vn',
       address: '926/15 Khu Phố 55, Phường Thới An, TP.HCM, Việt Nam',
+      zaloLink: 'https://zalo.me/0846989394',
     },
     productLinks: [
       { label: 'Máy xử lý rác CCoM', href: '/product' },
@@ -89,6 +93,8 @@ export const defaultAppConfig: AppConfig = {
     legal: '© 2024 CCoM.',
   },
   product: {
+    price: 4_990_000,
+    discountPercent: 17,
     colors: [
       { id: 'black', name: 'Đen', swatchClasses: 'bg-gray-900', image: '/product-black.jpg' },
       {

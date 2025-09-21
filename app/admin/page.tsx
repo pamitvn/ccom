@@ -21,12 +21,15 @@ export default async function AdminPage() {
     hotline: config.store.contact.hotline,
     email: config.store.contact.email,
     address: config.store.contact.address,
+    zaloLink: config.store.contact.zaloLink,
     productLinks: config.store.productLinks,
     supportLinks: config.store.supportLinks,
     legal: config.store.legal,
   };
 
   const productDefaults = {
+    price: config.product.price,
+    discountPercent: config.product.discountPercent,
     colors: config.product.colors,
     specifications: config.product.specifications,
     features: config.product.features,

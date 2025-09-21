@@ -17,6 +17,8 @@ type ActionState = {
 const initialState: ActionState = { status: 'idle' };
 
 type ProductDefaults = {
+  price: number;
+  discountPercent: number;
   colors: ProductColorOption[];
   specifications: ProductSpecification[];
   features: ProductFeature[];
@@ -81,6 +83,42 @@ export default function ProductForm({ defaults }: { defaults: ProductDefaults })
 
   return (
     <form action={formAction} className="space-y-8">
+      <section className="space-y-4">
+        <h3 className="text-sm font-semibold text-slate-800">Giá bán</h3>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="text-xs font-medium text-slate-500" htmlFor="price">
+              Giá hiện tại (VND)
+            </label>
+            <input
+              id="price"
+              name="price"
+              type="number"
+              min="0"
+              step="1000"
+              defaultValue={defaults.price}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+              required
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-slate-500" htmlFor="discountPercent">
+              Phần trăm giảm giá (%)
+            </label>
+            <input
+              id="discountPercent"
+              name="discountPercent"
+              type="number"
+              min="0"
+              max="100"
+              step="0.5"
+              defaultValue={defaults.discountPercent}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-slate-800">Màu sắc</h3>

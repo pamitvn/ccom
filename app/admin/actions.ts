@@ -165,6 +165,7 @@ export async function updateStoreAction(_prev: ActionState | undefined, formData
       hotline: (formData.get('hotline') as string | null)?.trim() || '',
       email: (formData.get('email') as string | null)?.trim() || '',
       address: (formData.get('address') as string | null)?.trim() || '',
+      zaloLink: (formData.get('zaloLink') as string | null)?.trim() || '',
     },
     productLinks,
     supportLinks,
@@ -196,12 +197,55 @@ export async function updateProductAction(_prev: ActionState | undefined, formDa
   }
 
   const current = await getAppConfig();
+  const fallbackPrice = (() => {
+    const candidate = (current.product as { price?: unknown }).price;
+    if (typeof candidate === 'number' && Number.isFinite(candidate) && candidate > 0) {
+      return candidate;
+    }
+    if (typeof candidate === 'string') {
+      const numeric = Number(candidate.replace(/[^0-9.-]/g, ''));
+      if (Number.isFinite(numeric) && numeric > 0) {
+        return Math.round(numeric);
+      }
+    }
+    return defaultAppConfig.product.price;
+  })();
+
+  const fallbackDiscount = (() => {
+    const candidate = (current.product as { discountPercent?: unknown }).discountPercent;
+    if (typeof candidate === 'number' && Number.isFinite(candidate) && candidate >= 0) {
+      return Math.max(0, Math.min(100, candidate));
+    }
+    const legacyLabel = (current.product as { discountLabel?: unknown }).discountLabel;
+    if (typeof legacyLabel === 'string') {
+      const numeric = Number(legacyLabel.replace(/[^0-9.,-]/g, '').replace(',', '.'));
+      if (Number.isFinite(numeric) && numeric >= 0) {
+        return Math.max(0, Math.min(100, numeric));
+      }
+    }
+    return defaultAppConfig.product.discountPercent;
+  })();
+
+  const priceRaw = (formData.get('price') as string | null)?.trim() ?? '';
+  const discountRaw = (formData.get('discountPercent') as string | null)?.trim() ?? '';
+  const parsedPrice = Number(priceRaw);
+  const parsedDiscount = Number(discountRaw);
+  const price =
+    priceRaw.length > 0 && Number.isFinite(parsedPrice) && parsedPrice > 0
+      ? Math.round(parsedPrice)
+      : fallbackPrice;
+  const discountPercent =
+    discountRaw.length > 0 && Number.isFinite(parsedDiscount) && parsedDiscount >= 0
+      ? Math.max(0, Math.min(100, parsedDiscount))
+      : fallbackDiscount;
   const colors = parseColors(formData);
   const specifications = parseSpecifications(formData);
   const features = parseFeatures(formData);
   const benefits = collectIndexedValues(formData, 'benefits');
 
   const product: ProductConfig = {
+    price,
+    discountPercent,
     colors: colors.length > 0 ? colors : current.product.colors,
     specifications: specifications.length > 0 ? specifications : current.product.specifications,
     features: features.length > 0 ? features : current.product.features,

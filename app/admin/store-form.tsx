@@ -19,6 +19,7 @@ type StoreFormProps = {
     hotline: string;
     email: string;
     address: string;
+    zaloLink: string;
     productLinks: Link[];
     supportLinks: Link[];
     legal: string;
@@ -94,7 +95,7 @@ export default function StoreForm({ defaults }: StoreFormProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         <div>
           <label htmlFor="hotline" className="text-sm font-medium text-slate-700">
             Hotline
@@ -126,6 +127,19 @@ export default function StoreForm({ defaults }: StoreFormProps) {
             id="address"
             name="address"
             defaultValue={defaults.address}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+          />
+        </div>
+        <div>
+          <label htmlFor="zaloLink" className="text-sm font-medium text-slate-700">
+            Liên kết Zalo
+          </label>
+          <input
+            id="zaloLink"
+            name="zaloLink"
+            type="url"
+            defaultValue={defaults.zaloLink}
+            placeholder="https://zalo.me/..."
             className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
           />
         </div>
