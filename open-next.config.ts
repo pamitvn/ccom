@@ -1,3 +1,13 @@
 import { defineCloudflareConfig } from '@opennextjs/cloudflare/config';
 
-export default defineCloudflareConfig({});
+const config = defineCloudflareConfig({});
+
+config.functions = {
+  appOg: {
+    runtime: 'edge',
+    routes: ['app/og/route'],
+    patterns: ['/og'],
+  },
+};
+
+export default config;

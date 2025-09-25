@@ -274,7 +274,9 @@ export default function ProductDetailClient({ product, zaloLink, hotline }: Prod
                     <span>Chia sẻ</span>
                   </button>
                   {shareFeedback ? (
-                    <span className="text-center text-xs text-gray-500">{shareFeedback}</span>
+                    <span aria-live="polite" className="text-center text-xs text-gray-500">
+                      {shareFeedback}
+                    </span>
                   ) : null}
                 </div>
               </div>

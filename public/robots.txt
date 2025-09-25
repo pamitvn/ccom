@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://cco-m.vn
+
+# Sitemaps
+Sitemap: https://cco-m.vn/sitemap.xml

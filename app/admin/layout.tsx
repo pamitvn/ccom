@@ -1,7 +1,25 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { isAdminAuthenticated } from '../../lib/auth';
+import { getCanonicalUrl, getMetadataBase } from '../../lib/seo';
 import LoginForm from './login-form';
+
+export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
+  title: {
+    default: 'Quản trị cửa hàng',
+    template: '%s | Quản trị CCoM',
+  },
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+  alternates: {
+    canonical: getCanonicalUrl('/admin'),
+  },
+};
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const authed = await isAdminAuthenticated();

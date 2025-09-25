@@ -8,7 +8,7 @@ binding = "ASSETS"
 directory = ".open-next/assets"
 
 [[routes]]
-pattern = "ccom.isap.vn"
+pattern = "cco-m.vn"
 custom_domain = true
 
 [durable_objects]

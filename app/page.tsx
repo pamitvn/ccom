@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
@@ -15,6 +16,34 @@ import {
   Shrink,
 } from 'lucide-react';
 import { getProductConfig, getStoreConfig } from '../lib/config';
+import { createPageMetadata } from '../lib/seo';
+
+type PageSearchParams = Record<string, string | string[] | undefined>;
+
+type PageProps = {
+  searchParams?: Promise<PageSearchParams>;
+};
+
+export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const store = await getStoreConfig();
+  const title = store.tagline;
+  const description = 'Máy xử lý rác hữu cơ CS 500W biến rác nhà bếp thành phân hữu cơ sạch chỉ trong vài giờ.';
+
+  return createPageMetadata({
+    title,
+    description,
+    path: '/',
+    keywords: [
+      'CCoM',
+      'máy xử lý rác hữu cơ',
+      'biến rác thành phân',
+      'máy xử lý rác nhà bếp',
+      'máy ủ rác hữu cơ',
+    ],
+    searchParams: resolvedSearchParams,
+  });
+}
 
 export default async function HomePage() {
   const store = await getStoreConfig();
@@ -145,6 +174,7 @@ export default async function HomePage() {
                 width={720}
                 height={720}
                 priority
+                sizes="(min-width: 1024px) 50vw, 90vw"
                 className="h-auto w-full"
               />
             </div>
