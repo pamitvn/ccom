@@ -93,8 +93,8 @@ export const defaultAppConfig: AppConfig = {
     legal: '© 2024 CCoM.',
   },
   product: {
-    price: 4_990_000,
-    discountPercent: 17,
+    price: 5_490_000,
+    discountPercent: 15,
     colors: [
       { id: 'black', name: 'Đen', swatchClasses: 'bg-gray-900', image: '/product-black.jpg' },
       {

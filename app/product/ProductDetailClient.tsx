@@ -116,7 +116,7 @@ export default function ProductDetailClient({ product, zaloLink, hotline }: Prod
   }, []);
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-green-50">
       <div className="border-b bg-white">
         <div className="container mx-auto flex items-center space-x-2 px-4 py-3 text-sm text-gray-600">
           <Link href="/" className="hover:text-green-600">
@@ -258,7 +258,7 @@ export default function ProductDetailClient({ product, zaloLink, hotline }: Prod
                     href={normalizedZaloLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center space-x-2 rounded-xl border-2 border-blue-600 py-3 font-semibold text-blue-600 transition-all hover:bg-blue-50"
+                    className="flex items-center justify-center space-x-2 rounded-xl border-2 border-green-600 py-3 font-semibold text-green-600 transition-all hover:bg-green-50"
                   >
                     <ZaloIcon className="h-6 w-6" />
                     <span>Zalo</span>
@@ -280,19 +280,19 @@ export default function ProductDetailClient({ product, zaloLink, hotline }: Prod
               </div>
             </div>
 
-            <div className="rounded-xl bg-blue-50 p-4">
+            <div className="rounded-xl bg-green-50 p-4">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="space-y-2">
-                  <Shield className="mx-auto h-8 w-8 text-blue-600" />
-                  <p className="text-sm font-medium text-blue-900">Bảo hành 2 năm</p>
+                  <Shield className="mx-auto h-8 w-8 text-green-600" />
+                  <p className="text-sm font-medium text-green-900">Bảo hành 1 năm lỗi từ nhà sản xuất</p>
                 </div>
                 <div className="space-y-2">
-                  <ArrowRight className="mx-auto h-8 w-8 text-blue-600" />
-                  <p className="text-sm font-medium text-blue-900">Giao hàng miễn phí</p>
+                  <ArrowRight className="mx-auto h-8 w-8 text-green-600" />
+                  <p className="text-sm font-medium text-green-900">Giao hàng miễn phí</p>
                 </div>
                 <div className="space-y-2">
-                  <Check className="mx-auto h-8 w-8 text-blue-600" />
-                  <p className="text-sm font-medium text-blue-900">Đổi trả 30 ngày</p>
+                  <Check className="mx-auto h-8 w-8 text-green-600" />
+                  <p className="text-sm font-medium text-green-900">Đổi mới trong 7 ngày nếu lỗi từ nhà sản xuất</p>
                 </div>
               </div>
             </div>
