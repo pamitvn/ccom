@@ -50,6 +50,17 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  webpack(config) {
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+    };
+    config.module.rules.push({
+      test: /\.wasm$/i,
+      type: 'asset/resource',
+    });
+    return config;
+  },
   async headers() {
     return [
       {

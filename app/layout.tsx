@@ -19,6 +19,9 @@ const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-san
 
 const defaultTitle = 'CCoM | Giải pháp xử lý rác tại nhà';
 const defaultDescription = 'Biến rác thải nhà bếp thành phân bón hữu cơ cùng thiết bị thông minh CCoM.';
+const GA_MEASUREMENT_ID = 'G-SZEX50NBYR';
+const GOOGLE_SITE_VERIFICATION =
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? process.env.GOOGLE_SITE_VERIFICATION;
 
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
@@ -58,6 +61,11 @@ export const metadata: Metadata = {
     images: getOpenGraphImages(defaultTitle, defaultDescription, '/')?.map((image) => image.url) ?? [],
   },
   robots: getRobotsMeta(),
+  ...(GOOGLE_SITE_VERIFICATION
+    ? {
+        verification: { google: GOOGLE_SITE_VERIFICATION },
+      }
+    : {}),
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -128,6 +136,18 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* eslint-disable-next-line @next/next/google-font-preconnect */}
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="beforeInteractive"
+        />
+        <Script id="google-analytics" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </head>
       <body className={`${inter.className} flex min-h-screen flex-col bg-white text-gray-900`}>
         <Header />
